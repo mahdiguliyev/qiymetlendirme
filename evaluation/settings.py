@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'crispy_forms',
     'django_cleanup',
+    'reportlab',
 ]
 
 AUTH_USER_MODEL = 'user.User'
