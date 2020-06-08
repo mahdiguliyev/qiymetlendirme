@@ -1,0 +1,19 @@
+{% extends "layout_company.html" %}
+{% block body %}
+   <h3>Sifariş Məlumatları</h3>
+   <hr>
+   <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h3>{{order.order_name}}</h3>
+            <b>Rayon məhkəməsinin qərarı: </b><p>{{order.order_law_decision}}</p>
+            <b>Borclu: </b><p>{{order.order_deptor}}</p>
+            <b>Tələbkar: </b><p>{{order.order_claimant}}</p>
+            <b>Əmlak haqqında məlumat: </b><p>{{order.order_information|safe}}</p>
+            <b>Əmlakın texniki sənədləri: </b><a class="btn btn-info" href="">Yüklə</a>
+            <br><br>
+            <b>Saxlanma yeri və tarix: </b><p>{{order.order_keep_date_location}}</p>
+            <b>Sifarişçinin mobil nömrəsi: </b><p>{{order.order_mobile}}</p>
+            <a class="btn btn-success" href="/evaluation_panel/evaluateform">Qiymətləndir</a>
+        </div>
+   </div>
+{% endblock body %}

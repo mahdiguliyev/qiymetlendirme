@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  {% comment %} <a class="navbar-brand" href="/">Evaluation</a> {% endcomment %}
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navb">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navb">
+    <ul class="navbar-nav mr-auto">
+    {% for w in worker %}
+      {% if w.is_bm %}
+        <li class="nav-item">
+          {% comment %} <a class="nav-link" href="/evaluation_panel/branchmanager">Nəzarət Paneli</a> {% endcomment %}
+        </li>
+      {% else %}
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+    {% if w.is_as %}
+        <li class="nav-item">
+          <a class="nav-link" href="">Qiymətləndirmə Paneli</a>
+        </li>
+    {% else %}
+    {% endif %}  
+    {% endfor %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/user/logout">Çıxış</a>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-default text-dark bg-white"><span class="glyphicon glyphicon-star" aria-hidden="true">{{request.user.sirname}} {{request.user.username}}</span></button>
+      </li>
+    </ul>
+  </div>
+</nav>

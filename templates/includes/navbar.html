@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/">Evaluation</a>
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navb">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navb">
+    <ul class="navbar-nav mr-auto">
+    {% if request.user.is_authenticated and request.user.is_customer_user %}
+      <li class="nav-item">
+        <a class="nav-link" href="/orders_panel/ordersview">Nəzarət Paneli</a>
+      </li>
+    {% else %} 
+    {% endif %}
+    {% if request.user.is_authenticated and request.user.is_company_user %}
+      <li class="nav-item">
+        <a class="nav-link" href="">Nəzarət Paneli</a>
+      </li>
+    {% else %} 
+    {% endif %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+    {% if request.user.is_authenticated and request.user.is_customer_user %}
+      <li class="nav-item">
+        <a class="nav-link" href="/orders_panel/addorder">Sifariş Paneli</a>
+      </li>
+    {% else %} 
+    {% endif %}
+    {% if request.user.is_authenticated and request.user.is_company_user %}
+      {% comment %} {% if request.worker.is_as %} {% endcomment %}
+        <li class="nav-item">
+          <a class="nav-link" href="">Qiymətləndirmə Paneli</a>
+        </li>
+      {% comment %} {% else %}
+      {% endif %} {% endcomment %}
+    {% else %} 
+    {% endif %}
+    {% if request.user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="/user/logout">Çıxış</a>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-default text-dark bg-white"><span class="glyphicon glyphicon-star" aria-hidden="true">{{request.user.sirname}} {{request.user.username}}</span></button>
+      </li>
+    {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="/user/register">Qeydiyyat</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/user/login">Daxil Ol</a>
+      </li>
+    {% endif %}
+    </ul>
+  </div>
+</nav>

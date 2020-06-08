@@ -1,0 +1,43 @@
+{% extends "layout_company.html" %}
+{% block body %}
+   <h3>Sifarişlər</h3>
+   <hr>
+   <p>
+        Məsul şəxs:  {{request.user.sirname}} {{request.user.username}}<br> 
+   </p>
+   <hr>
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+      <form method="post" class="form-inline">
+      {% csrf_token %}
+        <div class="form-group mx-sm-3 mb-2">
+         <input type="text" class="form-control" name="ordernumber" placeholder="Sifariş nömrəsin daxil edin">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Axtar</button>
+      </form>
+      </div>
+  </div>
+      {% if order != None %}
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+        {% for o in order %}
+            <h3>{{o.order_name}}</h3>
+            <b>Kateqoriya: </b><p>{{o.subcategory_name}}</p>
+            <b>Rayon məhkəməsinin qərarı: </b><p>{{o.order_law_decision}}</p>
+            <b>Borclu: </b><p>{{o.order_deptor}}</p>
+            <b>Tələbkar: </b><p>{{o.order_claimant}}</p>
+            <b>Əmlak haqqında məlumat: </b><p>{{o.order_information|safe}}</p>
+            <b>Əmlakın texniki sənədləri: </b><a class="btn btn-info" href="">Yüklə</a>
+            <br><br>
+            <b>Saxlanma yeri və tarix: </b><p>{{o.order_keep_date_location}}</p>
+            <b>Sifarişçinin mobil nömrəsi: </b><p>{{o.order_mobile}}</p>
+            <a class="btn btn-success" href="/evaluation_panel/evaluateform/{{o.id}}">Qiymətləndir</a>
+        {% endfor %}
+      </div>
+      </div>
+      {% else %}
+        {% comment %} <div class="alert alert-danger">
+          Sistemdə heç bir sifariş tapılmadı!
+        </div> {% endcomment %}
+      {% endif %}
+{% endblock body %}

@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+{% block body %}
+   <h3>Sifarişlər</h3>
+   <hr>
+   <p>
+        Məsul şəxs:  {{request.user.sirname}} {{request.user.username}}<br>
+        {% if request.user.is_icra_company %}
+        Təşkilat: İcra Şöbəsi
+        {% else %}
+        Təşkilat: Elektron Məhkəmə
+        {% endif %}
+        
+   </p>
+   <hr>
+   <h4>Qiymətləndirilməmiş Sifarişlər</h4>
+   {% comment %} Table 1 : Total Given Orders  {% endcomment %}
+   {% if orders_icra or orders_mahkama %}
+  <table class="table table-hover table-dark">
+    <thead>
+      <tr>
+        {% comment %} <th scope="col">ID</th> {% endcomment %}
+        <th scope="col">Sifarişin adı</th>
+        <th scope="col">Borclu</th>
+        <th scope="col">Tələbkar</th>
+        <th scope="col">Verilmə tarixi</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+  <tbody>
+  {% if request.user.is_icra_company %}
+    {% for order_icra in orders_icra %}
+
+      {% if order_icra.is_done != True %}
+        <tr>
+            <td><a href="">{{order_icra.order_name}}</a></td>
+            <td>{{order_icra.order_deptor}}</td>
+            <td>{{order_icra.order_claimant}}</td>
+            <td>{{order_icra.order_created_date}}</td>
+            <td><a class="btn btn-danger" href="">Sil</a></td> 
+            <td><a class="btn btn-info" href="">Düzəliş et</a></td>
+            <form method="post" action="/orders_panel/view_order/{{order_icra.id}}">
+            {% csrf_token %}
+            <td><button type="submit" class="btn btn-success">Sifarişi Təstiqlə</button></td> 
+            </form>
+        </tr>
+      {% else %}
+      {% endif %}
+        
+    {% endfor %}
+  {% else %}
+  {% endif %}
+  {% if request.user.is_e_mahkama %}
+    {% for order_mahkama in orders_mahkama %}
+
+      {% if order_mahkama.is_done != True %}
+        <tr>
+            <td><a href="">{{order_mahkama.order_name}}</a></td>
+            <td>{{order_mahkama.order_deptor}}</td>
+            <td>{{order_mahkama.order_claimant}}</td>
+            <td>{{order_mahkama.order_created_date}}</td>
+            <td><a class="btn btn-danger" href="">Sil</a></td> 
+            <td><a class="btn btn-info" href="">Düzəliş et</a></td>
+            <form method="post" action="/orders_panel/view_order/{{order_mahkama.id}}">
+            {% csrf_token %}
+            <td><button type="submit" class="btn btn-success">Sifarişi Təstiqlə</button></td> 
+            </form>
+        </tr>
+      {% else %}
+      {% endif %}
+        
+    {% endfor %}
+  {% else %}
+  {% endif %}
+  </tbody>
+</table>
+ {% else %}
+      <div class="alert alert-danger">
+         Sistemdə heç bir sifariş tapılmadı. Lütfən, sifariş daxil edin! 
+      </div>
+  {% endif %}
+
+<a class="btn btn-success" href="/orders_panel/addorder">Sifariş Əlave Et</a>
+
+<h4>Qiymətləndirilmiş Sifarişlər</h4>
+{% comment %} Table 2 : Evaluated Orders  {% endcomment %}
+   {% if orders_icra or orders_mahkama %}
+   <div class="alert alert-warning" role="alert">
+        <strong>Diqqət!</strong> Qiymət seçimində qiyməti daxil edərkən "," -i "." ilə əvəz edərək tam hissəni yazın!
+  </div>
+  <table class="table table-hover table-dark">
+    <thead>
+      <tr>
+        {% comment %} <th scope="col">ID</th> {% endcomment %}
+        <th scope="col">Sifarişin adı</th>
+        <th scope="col">Qiymət 1 (AZN)</th>
+        <th scope="col">Qiymət 2 (AZN)</th>
+        <th scope="col">Qiymət 3 (AZN)</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+  <tbody>
+  {% if request.user.is_icra_company %}
+    {% for order_icra in orders_icra %}
+      {% if order_icra.is_done %}
+        <tr>
+            <td><a href="">{{order_icra.order_name}}</a></td>
+            <td>{{order_icra.price_one}}</td>
+            <td>{{order_icra.price_two}}</td>
+            <td>{{order_icra.price_three}}</td>
+            {% if order_icra.is_choosed %}
+              <form method="post" action="/orders_panel/download_evaluated_document">
+              {% csrf_token %}
+              <td style="color:red;">Seçilmiş qiymət: {{order_icra.choosen_price}}</td>
+              <td><button type="submit" class="btn btn-info">Qiymətlənmə Sənədini Yüklə</button></td> 
+              </form>
+            {% else %}
+              <form method="post" action="/orders_panel/choose_order/{{order_icra.id}}">
+              {% csrf_token %}
+              <td><input type="text" class="form-control" name="price"></td>
+              <td><button type="submit" class="btn btn-success">Qiymət Seç</button></td> 
+              </form>
+            {% endif %}
+        </tr>
+      {% else %}
+      {% endif %}   
+
+    {% endfor %}
+  {% else %}
+  {% endif %}
+  {% if request.user.is_e_mahkama %}
+    {% for order_mahkama in orders_mahkama %}
+
+      {% if order_mahkama.is_done %}
+        <tr>
+            <td><a href="">{{order_mahkama.order_name}}</a></td>
+            <td>{{order_mahkama.price_one}}</td>
+            <td>{{order_mahkama.price_two}}</td>
+            <td>{{order_mahkama.price_three}}</td>
+            <form method="post" action="/orders_panel/choose_order/{{order_icra.id}}">
+            {% csrf_token %}
+            <td><input type="text" class="form-control" name="price"></td>
+            <td><button type="submit" class="btn btn-success">Qiymət Seç</button></td> 
+            </form>
+        </tr>
+      {% else %}
+      {% endif %}
+
+    {% endfor %}
+  {% else %}
+  {% endif %}
+  </tbody>
+</table>
+ {% else %}
+      <div class="alert alert-danger">
+         Sistemdə heç bir sifariş tapılmadı. Lütfən, sifariş daxil edin! 
+      </div>
+  {% endif %}
+
+{% endblock body %}

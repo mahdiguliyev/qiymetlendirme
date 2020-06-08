@@ -1,0 +1,41 @@
+{% extends "layout_company.html" %}
+{% block body %}
+   
+   <h3>Nəzarət Paneli</h3>
+   <hr>
+   <p>
+   {% for w in worker %}
+        Məsul şəxs:  {{request.user.sirname}} {{request.user.username}}<br> 
+        Təşkilat: {{w.company_name}}
+  {% endfor %}
+   </p>
+   <hr>
+   {% if orders != None %}
+    <table class="table table-hover table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Sifarişin adı</th>
+      <th scope="col">Borclu</th>
+      <th scope="col">Tələbkar</th>
+      <th scope="col">Verilmə tarixi</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for order in orders %}
+    <tr>
+            <td>{{order.order_name}}</td>
+            <td>{{order.order_deptor}}</td>
+            <td>{{order.order_claimant}}</td>
+            <td>{{order.order_created_date}}</td>
+            <td><a class="btn btn-success" href="/evaluation_panel/vieworderdetail/{{order.id}}">Göstər</a></td> 
+    </tr>  
+  {% endfor %}   
+  </tbody>
+</table>
+   {% else %}
+   <div class="alert alert-danger">
+         Sistemdə heç bir sifariş tapılmadı!
+      </div>
+   {% endif %}
+{% endblock body %}
